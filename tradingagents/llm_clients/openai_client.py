@@ -56,12 +56,14 @@ class OpenAIClient(BaseLLMClient):
             if api_key:
                 llm_kwargs["api_key"] = api_key
         elif self.provider == "openclaw":
-            llm_kwargs["base_url"] = (
-                self.base_url
-                or os.environ.get("OPENCLAW_BASE_URL")
-                or "https://api.openclaw.ai/v1"
-            )
-            api_key = os.environ.get("OPENCLAW_API_KEY")
+            base_url = self.base_url or os.environ.get("OPENCLAW_BASE_URL")
+            if not base_url or base_url == "https://api.openai.com/v1":
+                raise ValueError(
+                    "OpenClaw requires an OpenAI-compatible endpoint. "
+                    "Set config['backend_url'] or OPENCLAW_BASE_URL (e.g., a LiteLLM/OpenClaw gateway endpoint)."
+                )
+            llm_kwargs["base_url"] = base_url
+            api_key = os.environ.get("OPENCLAW_API_KEY") or os.environ.get("OPENCLAW_TOKEN")
             if api_key:
                 llm_kwargs["api_key"] = api_key
         elif self.provider == "ollama":

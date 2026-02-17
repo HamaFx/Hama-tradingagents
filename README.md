@@ -126,10 +126,13 @@ export GOOGLE_API_KEY=...          # Google (Gemini)
 export ANTHROPIC_API_KEY=...       # Anthropic (Claude)
 export XAI_API_KEY=...             # xAI (Grok)
 export OPENROUTER_API_KEY=...      # OpenRouter
-export OPENCLAW_API_KEY=...         # OpenClaw
-export OPENCLAW_BASE_URL=...        # Optional OpenClaw-compatible endpoint override
+export OPENCLAW_BASE_URL=...        # Required for openclaw provider (OpenAI-compatible endpoint)
+export OPENCLAW_API_KEY=...         # Optional: API key/token for that endpoint
 export ALPHA_VANTAGE_API_KEY=...   # Alpha Vantage
 ```
+
+
+For `llm_provider: "openclaw"`, point `OPENCLAW_BASE_URL` (or `config["backend_url"]`) to your OpenAI-compatible gateway endpoint (for example, LiteLLM/OpenClaw stack).
 
 For local models, configure Ollama with `llm_provider: "ollama"` in your config.
 

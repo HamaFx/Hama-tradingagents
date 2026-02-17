@@ -1,3 +1,4 @@
+import os
 from typing import Any, Dict
 
 
@@ -59,6 +60,15 @@ def validate_tradingagents_config(config: Dict[str, Any]) -> None:
         thinking_level = config.get("google_thinking_level")
         if thinking_level is not None and not str(thinking_level).strip():
             raise ValueError("'google_thinking_level' must be a non-empty string when set")
+
+    if provider == "openclaw":
+        backend_url = config.get("backend_url")
+        env_base = os.environ.get("OPENCLAW_BASE_URL")
+        if (not backend_url or backend_url == "https://api.openai.com/v1") and not env_base:
+            raise ValueError(
+                "'openclaw' provider requires config['backend_url'] or OPENCLAW_BASE_URL "
+                "pointing to an OpenAI-compatible endpoint"
+            )
 
 
 def validate_selected_analysts(selected_analysts: list[str]) -> None:
