@@ -29,7 +29,7 @@ class UnifiedChatOpenAI(ChatOpenAI):
 
 
 class OpenAIClient(BaseLLMClient):
-    """Client for OpenAI, Ollama, OpenRouter, and xAI providers."""
+    """Client for OpenAI-compatible providers: OpenAI, Ollama, OpenRouter, OpenClaw, and xAI."""
 
     def __init__(
         self,
@@ -53,6 +53,11 @@ class OpenAIClient(BaseLLMClient):
         elif self.provider == "openrouter":
             llm_kwargs["base_url"] = "https://openrouter.ai/api/v1"
             api_key = os.environ.get("OPENROUTER_API_KEY")
+            if api_key:
+                llm_kwargs["api_key"] = api_key
+        elif self.provider == "openclaw":
+            llm_kwargs["base_url"] = "https://api.openclaw.ai/v1"
+            api_key = os.environ.get("OPENCLAW_API_KEY")
             if api_key:
                 llm_kwargs["api_key"] = api_key
         elif self.provider == "ollama":

@@ -8,6 +8,7 @@ SUPPORTED_LLM_PROVIDERS = {
     "xai",
     "openrouter",
     "ollama",
+    "openclaw",
 }
 
 SUPPORTED_ANALYSTS = {"market", "social", "news", "fundamentals"}
