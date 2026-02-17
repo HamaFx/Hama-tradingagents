@@ -127,6 +127,7 @@ export ANTHROPIC_API_KEY=...       # Anthropic (Claude)
 export XAI_API_KEY=...             # xAI (Grok)
 export OPENROUTER_API_KEY=...      # OpenRouter
 export OPENCLAW_API_KEY=...         # OpenClaw
+export OPENCLAW_BASE_URL=...        # Optional OpenClaw-compatible endpoint override
 export ALPHA_VANTAGE_API_KEY=...   # Alpha Vantage
 ```
 

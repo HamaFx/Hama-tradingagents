@@ -56,7 +56,11 @@ class OpenAIClient(BaseLLMClient):
             if api_key:
                 llm_kwargs["api_key"] = api_key
         elif self.provider == "openclaw":
-            llm_kwargs["base_url"] = "https://api.openclaw.ai/v1"
+            llm_kwargs["base_url"] = (
+                self.base_url
+                or os.environ.get("OPENCLAW_BASE_URL")
+                or "https://api.openclaw.ai/v1"
+            )
             api_key = os.environ.get("OPENCLAW_API_KEY")
             if api_key:
                 llm_kwargs["api_key"] = api_key
