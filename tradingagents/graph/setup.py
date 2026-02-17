@@ -9,6 +9,7 @@ from tradingagents.agents import *
 from tradingagents.agents.utils.agent_states import AgentState
 
 from .conditional_logic import ConditionalLogic
+from .config_validation import validate_selected_analysts
 
 
 class GraphSetup:
@@ -49,8 +50,7 @@ class GraphSetup:
                 - "news": News analyst
                 - "fundamentals": Fundamentals analyst
         """
-        if len(selected_analysts) == 0:
-            raise ValueError("Trading Agents Graph Setup Error: no analysts selected!")
+        validate_selected_analysts(selected_analysts)
 
         # Create analyst nodes
         analyst_nodes = {}
