@@ -1,0 +1,65 @@
+import pytest
+from tradingagents.default_config import DEFAULT_CONFIG
+from tradingagents.graph.config_validation import validate_tradingagents_config
+from tradingagents.llm_clients.factory import create_llm_client
+from tradingagents.llm_clients.openai_client import OpenAIClient
+from tradingagents.llm_clients.validators import validate_model
+
+
+def test_openclaw_provider_is_valid_config():
+    config = DEFAULT_CONFIG.copy()
+    config["llm_provider"] = "openclaw"
+    config["backend_url"] = "http://localhost:4000/v1"
+    validate_tradingagents_config(config)
+
+
+def test_factory_maps_openclaw_to_openai_compatible_client():
+    client = create_llm_client(provider="openclaw", model="openclaw-chat")
+    assert isinstance(client, OpenAIClient)
+
+
+def test_openclaw_accepts_any_model_name():
+    assert validate_model("openclaw", "custom/model-name") is True
+
+
+def test_openclaw_uses_explicit_base_url(monkeypatch):
+    captured = {}
+
+    class DummyChat:
+        def __init__(self, **kwargs):
+            captured.update(kwargs)
+
+    monkeypatch.setattr("tradingagents.llm_clients.openai_client.UnifiedChatOpenAI", DummyChat)
+
+    client = create_llm_client(
+        provider="openclaw",
+        model="openclaw-chat",
+        base_url="https://proxy.example/v1",
+    )
+    _ = client.get_llm()
+
+    assert captured["base_url"] == "https://proxy.example/v1"
+
+
+def test_openclaw_uses_env_base_url_when_no_explicit_base_url(monkeypatch):
+    captured = {}
+
+    class DummyChat:
+        def __init__(self, **kwargs):
+            captured.update(kwargs)
+
+    monkeypatch.setattr("tradingagents.llm_clients.openai_client.UnifiedChatOpenAI", DummyChat)
+    monkeypatch.setenv("OPENCLAW_BASE_URL", "https://env-proxy.example/v1")
+
+    client = create_llm_client(provider="openclaw", model="openclaw-chat")
+    _ = client.get_llm()
+
+    assert captured["base_url"] == "https://env-proxy.example/v1"
+
+
+def test_openclaw_raises_without_endpoint(monkeypatch):
+    monkeypatch.delenv("OPENCLAW_BASE_URL", raising=False)
+    client = create_llm_client(provider="openclaw", model="openclaw-chat")
+
+    with pytest.raises(ValueError, match="OpenClaw requires an OpenAI-compatible endpoint"):
+        client.get_llm()

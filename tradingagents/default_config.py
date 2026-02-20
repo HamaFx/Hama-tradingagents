@@ -8,10 +8,10 @@ DEFAULT_CONFIG = {
         "dataflows/data_cache",
     ),
     # LLM settings
-    "llm_provider": "openai",
+    "llm_provider": "openai",  # openai, google, anthropic, xai, openrouter, ollama, openclaw
     "deep_think_llm": "gpt-5.2",
     "quick_think_llm": "gpt-5-mini",
-    "backend_url": "https://api.openai.com/v1",
+    "backend_url": "https://api.openai.com/v1",  # for openclaw set this to your OpenAI-compatible gateway endpoint
     # Provider-specific thinking configuration
     "google_thinking_level": None,      # "high", "minimal", etc.
     "openai_reasoning_effort": None,    # "medium", "high", "low"
